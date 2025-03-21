@@ -7,6 +7,25 @@ pipeline {
     }
 
     stages {
+        stage('Test') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }            
+
+            steps {
+                sh '''
+                npm ci --cache .npm
+                test -f build/index.html
+                npm test --cache .npm
+                '''
+            }
+        } 
+
+
+
         stage('Build') {
             agent {
                 docker {
@@ -27,20 +46,20 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }            
+        // stage('Test') {
+        //     agent {
+        //         docker {
+        //             image 'node:18-alpine'
+        //             reuseNode true
+        //         }
+        //     }            
 
-            steps {
-                sh '''
-                test -f build/index.html
-                npm test --cache .npm
-                '''
-            }
-        }        
+        //     steps {
+        //         sh '''
+        //         test -f build/index.html
+        //         npm test --cache .npm
+        //         '''
+        //     }
+        // }        
     }
 }
