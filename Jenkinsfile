@@ -22,7 +22,24 @@ pipeline {
                 npm test --cache .npm
                 '''
             }
-        } 
+        }
+
+        stage('End to End testing') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.51.1-noble'
+                    reuseNode true
+                }
+            }            
+
+            steps {
+                sh '''
+                npm install serve
+                node_modules/.bin/serve -s build
+                npx playwright test
+                '''
+            }
+        }          
 
 
 
@@ -61,5 +78,12 @@ pipeline {
         //         '''
         //     }
         // }        
+    }
+
+
+    post {
+        always {
+            junit 'test-results/junit.xml'
+        }
     }
 }
