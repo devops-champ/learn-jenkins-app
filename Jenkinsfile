@@ -7,40 +7,82 @@ pipeline {
     }
 
     stages {
-        stage('Test') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }            
+        stage("Run unit test and end-to-end test") {
+            parallel {
+                stage('Test') {
+                    agent {
+                        docker {
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }            
 
-            steps {
-                sh '''
-                npm ci --cache .npm
-                test -f build/index.html
-                npm test --cache .npm
-                '''
+                    steps {
+                        sh '''
+                        npm ci --cache .npm
+                        test -f build/index.html
+                        npm test --cache .npm
+                        '''
             }
         }
 
-        stage('End to End testing') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                }
-            }            
+                stage('End to End testing') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
+                        }
+                    }            
 
-            steps {
-                sh '''
-                npm install serve
-                node_modules/.bin/serve -s build &
-                sleep 10
-                npx playwright test --reporter=html
-                '''
+                    steps {
+                        sh '''
+                        npm install serve
+                        node_modules/.bin/serve -s build &
+                        sleep 10
+                        npx playwright test --reporter=html
+                        '''
+                    }
+                } 
+
             }
-        }          
+        }
+
+
+
+        // stage('Test') {
+        //     agent {
+        //         docker {
+        //             image 'node:18-alpine'
+        //             reuseNode true
+        //         }
+        //     }            
+
+        //     steps {
+        //         sh '''
+        //         npm ci --cache .npm
+        //         test -f build/index.html
+        //         npm test --cache .npm
+        //         '''
+        //     }
+        // }
+
+        // stage('End to End testing') {
+        //     agent {
+        //         docker {
+        //             image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+        //             reuseNode true
+        //         }
+        //     }            
+
+        //     steps {
+        //         sh '''
+        //         npm install serve
+        //         node_modules/.bin/serve -s build &
+        //         sleep 10
+        //         npx playwright test --reporter=html
+        //         '''
+        //     }
+        // }          
 
 
 
