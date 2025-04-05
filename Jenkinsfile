@@ -47,45 +47,7 @@ pipeline {
             }
         }
 
-
-
-        // stage('Test') {
-        //     agent {
-        //         docker {
-        //             image 'node:18-alpine'
-        //             reuseNode true
-        //         }
-        //     }            
-
-        //     steps {
-        //         sh '''
-        //         npm ci --cache .npm
-        //         test -f build/index.html
-        //         npm test --cache .npm
-        //         '''
-        //     }
-        // }
-
-        // stage('End to End testing') {
-        //     agent {
-        //         docker {
-        //             image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-        //             reuseNode true
-        //         }
-        //     }            
-
-        //     steps {
-        //         sh '''
-        //         npm install serve
-        //         node_modules/.bin/serve -s build &
-        //         sleep 10
-        //         npx playwright test --reporter=html
-        //         '''
-        //     }
-        // }          
-
-
-
+         
         stage('Build') {
             agent {
                 docker {
@@ -116,28 +78,12 @@ pipeline {
             }
             steps {
                 sh '''
-                npm install netlify --save-dev
+                npm install netlify-cli --cache .npm
                 node_modules/.bin/netlify --version
                 '''
             }
         }        
-        
-
-        // stage('Test') {
-        //     agent {
-        //         docker {
-        //             image 'node:18-alpine'
-        //             reuseNode true
-        //         }
-        //     }            
-
-        //     steps {
-        //         sh '''
-        //         test -f build/index.html
-        //         npm test --cache .npm
-        //         '''
-        //     }
-        // }        
+               
     }
 
 
