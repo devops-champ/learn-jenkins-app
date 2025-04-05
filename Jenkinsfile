@@ -116,7 +116,7 @@ pipeline {
             }
             steps {
                 sh '''
-                npm install netlify-cli
+                npm install netlify --save-dev
                 node_modules/.bin/netlify --version
                 '''
             }
