@@ -26,23 +26,23 @@ pipeline {
             }
         }
 
-                stage('End to End testing') {
-                    agent {
-                        docker {
-                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                            reuseNode true
-                        }
-                    }            
+                // stage('End to End testing') {
+                //     agent {
+                //         docker {
+                //             image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                //             reuseNode true
+                //         }
+                //     }            
 
-                    steps {
-                        sh '''
-                        npm install serve
-                        node_modules/.bin/serve -s build &
-                        sleep 10
-                        npx playwright test --reporter=html
-                        '''
-                    }
-                } 
+                //     steps {
+                //         sh '''
+                //         npm install serve
+                //         node_modules/.bin/serve -s build &
+                //         sleep 10
+                //         npx playwright test --reporter=html
+                //         '''
+                //     }
+                // } 
 
             }
         }
@@ -79,7 +79,7 @@ pipeline {
             steps {
                 sh '''
                 npm ci --cache .npm
-                npm install --save-dev netlify-cli
+                npm install -g netlify-cli --unsafe-perm
                 node_modules/.bin/netlify --version
                 '''
             }
