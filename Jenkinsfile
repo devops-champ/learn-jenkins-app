@@ -73,7 +73,7 @@ pipeline {
             agent {
                 docker {
                     image 'node:18-bullseye'
-                    args '-u root:root'
+                    args '-u node'
                     reuseNode true
                 }
             }
