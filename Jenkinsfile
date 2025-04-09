@@ -79,7 +79,7 @@ pipeline {
             }
             steps {
                 sh '''
-                npm ci --cache .npm
+
                 npm install --save-dev netlify-cli --unsafe-perm
                 node_modules/.bin/netlify --version
                 '''
