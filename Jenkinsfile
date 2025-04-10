@@ -19,9 +19,9 @@ pipeline {
 
                     steps {
                         sh '''
-                        #npm ci --cache .npm
+                        npm ci
                         test -f build/index.html
-                        #npm test --cache .npm
+                        npm test
                         '''
             }
         }
