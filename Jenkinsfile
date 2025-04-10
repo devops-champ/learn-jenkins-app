@@ -66,7 +66,7 @@ pipeline {
         //         ls -la
         //         '''
         //     }
-        // }
+         }
 
 
 //         stage('Deploy') {
@@ -86,7 +86,7 @@ pipeline {
 //             }
 //         }        
                
-//     }
+     }
 
 
 //     post {
