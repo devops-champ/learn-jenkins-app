@@ -25,6 +25,12 @@ pipeline {
 
 
         stage('Test') {
+            agent {
+                docker {
+                    image 'node:20-slim'
+                    reuseNode true
+                }
+            }            
             
             environment {
                 // Set a custom cache directory inside the container to avoid permission issues
