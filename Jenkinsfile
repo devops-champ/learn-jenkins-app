@@ -75,7 +75,7 @@ pipeline {
         stage('Deploy') {
             agent {
                 docker {
-                    image 'node:20-slim'
+                    image 'node:20'
                     reuseNode true
                 }
             }            
@@ -87,7 +87,7 @@ pipeline {
 
             steps {
                 sh'''
-                npm install netlify-cli --unsafe-perm
+                npm install netlify-cli
                 node_modules/.bin/netlify --version
                 '''
             }
