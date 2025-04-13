@@ -12,6 +12,7 @@ pipeline {
             steps {
                 sh'''
                 npm cache clean --force
+                sudo chown -R 129:140 "/.npm"
                 npm ci
                 npm run build
                 '''
