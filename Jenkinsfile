@@ -11,6 +11,7 @@ pipeline {
             }
             steps {
                 sh'''
+                npm cache clean --force
                 npm ci
                 npm run build
                 '''
