@@ -11,8 +11,8 @@ pipeline {
             }
             steps {
                 sh'''
-                npm ci
-                npm run build
+                sudo -u node npm ci
+                sudo -u node npm run build
                 '''
             }
         }
