@@ -44,7 +44,31 @@ pipeline {
 
                 '''
             }
-        }        
+        }
+
+
+        stage('E2E') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.51.1-noble'
+                    reuseNode true
+                }
+            }            
+            
+            environment {
+                // Set a custom cache directory inside the container to avoid permission issues
+                NPM_CONFIG_CACHE = '/tmp/.npm'
+            }
+
+            steps {
+                sh'''
+                npm install -g serve
+                serve -s build
+                npx playwright test
+
+                '''
+            }
+        }                 
     }
 
     post {
