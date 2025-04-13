@@ -11,7 +11,7 @@ pipeline {
             }
             steps {
                 sh'''
-                npm ci clean-install
+                npm ci
                 npm run build
                 '''
             }
