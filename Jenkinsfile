@@ -87,7 +87,7 @@ pipeline {
 
             steps {
                 sh'''
-                npx netlify-cli --version
+                npx netlify-cli --version || true
                 '''
             }
         }                          
