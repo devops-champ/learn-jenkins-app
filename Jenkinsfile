@@ -17,7 +17,7 @@ pipeline {
             }
             
             environment {
-                // Set a custom cache directory inside the container to avoid permission issues
+                // Set a custom cache directory inside the container to avoid permission issuesss
                 NPM_CONFIG_CACHE = '/tmp/.npm'
             }
 
