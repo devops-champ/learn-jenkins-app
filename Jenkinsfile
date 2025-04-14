@@ -88,13 +88,13 @@ pipeline {
             
             environment {
                 NPM_CONFIG_CACHE = '/tmp/.npm'
-                NPM_CONFIG_PREFIX = '/home/node/.npm-global'
-                PATH = "/home/node/.npm-global/bin:${PATH}"              
+                NPM_CONFIG_PREFIX = '/tmp/.npm-global' 
+                PATH = "/tmp/.npm-global/bin:${PATH}"              
             }
 
             steps {
                 sh'''
-                mkdir -p /home/node/.npm-global
+                mkdir -p /tmp/.npm-global
                 npm install -g netlify-cli --unsafe-perm --cache=$NPM_CONFIG_CACHE
                 netlify --version
                 '''
