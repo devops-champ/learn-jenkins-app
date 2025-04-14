@@ -95,7 +95,7 @@ pipeline {
             steps {
                 sh'''
                 mkdir -p /tmp/.npm-global
-                npm install -g netlify-cli --unsafe-perm --cache=$NPM_CONFIG_CACHE
+                npm install netlify-cli --unsafe-perm --cache=$NPM_CONFIG_CACHE
                 node_modules/.bin/netlify --version
                 '''
             }
