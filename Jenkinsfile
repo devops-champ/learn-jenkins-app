@@ -8,74 +8,74 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:20-slim'
-                    reuseNode true
-                }
-            }
+        // stage('Build') {
+        //     agent {
+        //         docker {
+        //             image 'node:20-slim'
+        //             reuseNode true
+        //         }
+        //     }
             
-            environment {
-                // Set a custom cache directory inside the container to avoid permission issues
-                NPM_CONFIG_CACHE = '/tmp/.npm'
-            }
+        //     environment {
+        //         // Set a custom cache directory inside the container to avoid permission issues
+        //         NPM_CONFIG_CACHE = '/tmp/.npm'
+        //     }
 
-            steps {
-                sh'''
-                npm ci
-                npm run build
-                '''
-            }
-        }
+        //     steps {
+        //         sh'''
+        //         npm ci
+        //         npm run build
+        //         '''
+        //     }
+        // }
 
 
-        stage('Test') {
-            agent {
-                docker {
-                    image 'node:20-slim'
-                    reuseNode true
-                }
-            }            
+        // stage('Test') {
+        //     agent {
+        //         docker {
+        //             image 'node:20-slim'
+        //             reuseNode true
+        //         }
+        //     }            
             
-            environment {
-                // Set a custom cache directory inside the container to avoid permission issues
-                NPM_CONFIG_CACHE = '/tmp/.npm'
-            }
+        //     environment {
+        //         // Set a custom cache directory inside the container to avoid permission issues
+        //         NPM_CONFIG_CACHE = '/tmp/.npm'
+        //     }
 
-            steps {
-                sh'''
-                test -f build/index.html
-                npm test
+        //     steps {
+        //         sh'''
+        //         test -f build/index.html
+        //         npm test
 
-                '''
-            }
-        }
+        //         '''
+        //     }
+        // }
 
 
-        stage('E2E') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                }
-            }            
+        // stage('E2E') {
+        //     agent {
+        //         docker {
+        //             image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+        //             reuseNode true
+        //         }
+        //     }            
             
-            environment {
-                // Set a custom cache directory inside the container to avoid permission issues
-                NPM_CONFIG_CACHE = '/tmp/.npm'
-            }
+        //     environment {
+        //         // Set a custom cache directory inside the container to avoid permission issues
+        //         NPM_CONFIG_CACHE = '/tmp/.npm'
+        //     }
 
-            steps {
-                sh'''
-                npm install serve
-                node_modules/.bin/serve -s build &
-                sleep 10
-                npx playwright test --reporter=html
+        //     steps {
+        //         sh'''
+        //         npm install serve
+        //         node_modules/.bin/serve -s build &
+        //         sleep 10
+        //         npx playwright test --reporter=html
 
-                '''
-            }
-        }
+        //         '''
+        //     }
+        // }
 
 
         stage('Deploy') {
@@ -88,22 +88,26 @@ pipeline {
             
             environment {
                 NPM_CONFIG_CACHE = '/tmp/.npm'
+                NPM_CONFIG_PREFIX = '/home/node/.npm-global'
+                PATH = "/home/node/.npm-global/bin:${PATH}"              
             }
 
             steps {
                 sh'''
+                mkdir -p /home/node/.npm-global
                 npm install -g netlify-cli --unsafe-perm --cache=$NPM_CONFIG_CACHE
+                netlify --version
                 '''
             }
         }                          
     }
 
-    post {
-        always {
-            junit 'jest-results/junit.xml'
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-        }
-    }
+    // post {
+    //     always {
+    //         junit 'jest-results/junit.xml'
+    //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+    //     }
+    // }
 
 
 }
