@@ -94,6 +94,7 @@ pipeline {
 
             steps {
                 sh'''
+                    export PATH="${WORKSPACE}/.npm-global/bin:$PATH"
                     mkdir -p "${NPM_CONFIG_PREFIX}"
                     npm install -g netlify-cli --unsafe-perm --cache=$NPM_CONFIG_CACHE
                     netlify --version
