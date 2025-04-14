@@ -93,8 +93,7 @@ pipeline {
 
             steps {
                 sh'''
-                npx netlify-cli --version || true
-                npx netlify status
+                netlify deploy --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN --prod
                 '''
             }
         }                          
