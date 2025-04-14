@@ -17,7 +17,7 @@ pipeline {
             }
             
             environment {
-                // Set a custom cache directory inside the container to avoid permission issuesss
+                // Set a custom cache directory inside the container to avoid permission issues
                 NPM_CONFIG_CACHE = '/tmp/.npm'
             }
 
@@ -87,13 +87,12 @@ pipeline {
             }            
             
             environment {
-                // Set a custom cache directory inside the container to avoid permission issues
                 NPM_CONFIG_CACHE = '/tmp/.npm'
             }
 
             steps {
                 sh'''
-                netlify deploy --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN --prod
+                npm install -g netlify-cli --unsafe-perm --cache=$NPM_CONFIG_CACHE
                 '''
             }
         }                          
