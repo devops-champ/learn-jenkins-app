@@ -3,12 +3,28 @@ pipeline {
 
 
     environment {
-        NETLIFY_SITE_ID = 'b66c1b0f-306f-47ac-9291-36910161357e'
-        NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+
         REACT_APP_VERSION = "1.0$BUILD_ID" 
     }
 
     stages {
+
+        stage('AWS') {
+            agent {
+                docker {
+                    image 'amazon/aws-cli'
+                    args "--entrypoint=''"
+                }
+            }
+
+            steps {
+                sh'''
+                aws --version
+                '''
+            }
+        }
+
+
         // stage('Build') {
         //     agent {
         //         docker {
@@ -79,28 +95,28 @@ pipeline {
         // }
 
 
-        stage('Deploy') {
-            agent {
-                docker {
-                    image 'node:20'
-                    reuseNode true
-                }
-            }            
+        // stage('Deploy to AWS') {
+        //     agent {
+        //         docker {
+        //             image 'node:20'
+        //             reuseNode true
+        //         }
+        //     }            
             
-            environment {
-            NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
-            NPM_CONFIG_PREFIX = "${WORKSPACE}/.npm-global"           
-            }
+        //     environment {
+        //     NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
+        //     NPM_CONFIG_PREFIX = "${WORKSPACE}/.npm-global"           
+        //     }
 
-            steps {
-                sh'''
-                # Install and run Netlify CLI via npx
-                    npm install netlify-cli --cache=$NPM_CONFIG_CACHE
-                    npx netlify --version  # Verify version
-                    npx netlify deploy --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN --prod
-                '''
-            }
-        }                          
+        //     steps {
+        //         sh'''
+        //         # Install and run Netlify CLI via npx
+        //             npm install netlify-cli --cache=$NPM_CONFIG_CACHE
+        //             npx netlify --version  # Verify version
+        //             npx netlify deploy --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN --prod
+        //         '''
+        //     }
+        // }                          
     }
 
     // post {
