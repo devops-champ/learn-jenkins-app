@@ -4,12 +4,34 @@ pipeline {
 
     environment {
 
-        REACT_APP_VERSION = "1.0$BUILD_ID" 
+        REACT_APP_VERSION = "1.0$BUILD_ID"
+        AWS_DEFAULT_REGION = 'us-east-1'
     }
 
     stages {
 
-        stage('AWS') {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:20-slim'
+                    reuseNode true
+                }
+            }
+            
+            environment {
+                // Set a custom cache directory inside the container to avoid permission issues
+                NPM_CONFIG_CACHE = '/tmp/.npm'
+            }
+
+            steps {
+                sh'''
+                npm ci
+                npm run build
+                '''
+            }
+        }
+
+        stage('Deploy to AWS') {
             agent {
                 docker {
                     image 'amazon/aws-cli'
@@ -21,34 +43,12 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                 sh'''
                 aws --version
-                aws s3 ls
+                aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json
                 '''
                 }
 
             }
-        }
-
-
-        // stage('Build') {
-        //     agent {
-        //         docker {
-        //             image 'node:20-slim'
-        //             reuseNode true
-        //         }
-        //     }
-            
-        //     environment {
-        //         // Set a custom cache directory inside the container to avoid permission issues
-        //         NPM_CONFIG_CACHE = '/tmp/.npm'
-        //     }
-
-        //     steps {
-        //         sh'''
-        //         npm ci
-        //         npm run build
-        //         '''
-        //     }
-        // }
+        }        
 
 
         // stage('Test') {
