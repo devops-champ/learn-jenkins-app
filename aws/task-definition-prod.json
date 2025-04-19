@@ -2,7 +2,7 @@
     "requiresCompatibilities": [
         "FARGATE"
     ],
-    "family": "",
+    "family": "learnjenkins-task-def",
     "containerDefinitions": [
         {
             "name": "learnjenkinsapp-prod",
