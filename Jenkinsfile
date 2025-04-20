@@ -47,7 +47,7 @@ pipeline {
                 amazon-linux-extras install docker
                 pwd
                 ls -la
-                docker build -t mujenkinsapp "${WORKSPACE}"
+                docker build -t mujenkinsapp /var/lib/jenkins/workspace/nodejs/
                 '''
             }
         }
