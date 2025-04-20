@@ -13,41 +13,38 @@ pipeline {
 
     stages {
 
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:20-slim'
-                    reuseNode true
-                }
-            }
+        // stage('Build') {
+        //     agent {
+        //         docker {
+        //             image 'node:20-slim'
+        //             reuseNode true
+        //         }
+        //     }
             
-            environment {
-                // Set a custom cache directory inside the container to avoid permission issues
-                NPM_CONFIG_CACHE = '/tmp/.npm'
-            }
+        //     environment {
+        //         // Set a custom cache directory inside the container to avoid permission issues
+        //         NPM_CONFIG_CACHE = '/tmp/.npm'
+        //     }
 
-            steps {
-                sh'''
-                npm ci
-                npm run build
-                '''
-            }
-        }
+        //     steps {
+        //         sh'''
+        //         npm ci
+        //         npm run build
+        //         '''
+        //     }
+        // }
 
         stage('Build Docker image') {
             agent {
                 docker {
-                    image 'amazon/aws-cli'
+                    image 'docker:24.0.7'
                     args "-u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint=''"
                 }
             }
 
             steps {
                 sh '''
-                amazon-linux-extras install docker
-                pwd
-                ls -la
-                docker build -t mujenkinsapp /var/lib/jenkins/workspace/nodejs/
+                docker build -t mujenkinsapp .
                 '''
             }
         }
