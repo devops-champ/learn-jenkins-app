@@ -40,7 +40,13 @@ pipeline {
                     image 'amazon/aws-cli'
                     args "-u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint=''"
                 }
-            }            
+            }
+
+            environment {
+                // Set a custom cache directory inside the container to avoid permission issues
+                NPM_CONFIG_CACHE = '/tmp/.npm'
+            }
+
             steps {
                 sh '''
                 amazon-linux-extras install docker
