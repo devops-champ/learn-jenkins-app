@@ -45,7 +45,9 @@ pipeline {
             steps {
                 sh '''
                 amazon-linux-extras install docker
-                docker build -t mujenkinsapp .
+                pwd
+                ls -la
+                docker build -t mujenkinsapp "${WORKSPACE}"
                 '''
             }
         }
