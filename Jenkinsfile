@@ -45,7 +45,7 @@ pipeline {
 
             steps {
                 sh '''
-                docker build -t mujenkinsapp .
+                docker build -t mujenkinsapp:$REACT_APP_VERSION .
                 '''
             }
         }
