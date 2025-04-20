@@ -9,35 +9,36 @@ pipeline {
         AWS_ECS_CLUSTER = 'learnjenkins'
         AWS_ECS_SERVICE = 'jenkins-app-service'
         AWS_ECS_TASK = 'LearnJenkinsApps-task-def'
+        AWS_DOCKER_REGISTRY = '257394477950.dkr.ecr.us-east-1.amazonaws.com'
     }
 
     stages {
 
-        // stage('Build') {
-        //     agent {
-        //         docker {
-        //             image 'node:20-slim'
-        //             reuseNode true
-        //         }
-        //     }
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:20-slim'
+                    reuseNode true
+                }
+            }
             
-        //     environment {
-        //         // Set a custom cache directory inside the container to avoid permission issues
-        //         NPM_CONFIG_CACHE = '/tmp/.npm'
-        //     }
+            environment {
+                // Set a custom cache directory inside the container to avoid permission issues
+                NPM_CONFIG_CACHE = '/tmp/.npm'
+            }
 
-        //     steps {
-        //         sh'''
-        //         npm ci
-        //         npm run build
-        //         '''
-        //     }
-        // }
+            steps {
+                sh'''
+                npm ci
+                npm run build
+                '''
+            }
+        }
 
         stage('Build Docker image') {
             agent {
                 docker {
-                    image 'docker:24.0.7'
+                    image 'amazon/aws-cli'
                     reuseNode true
                     args "-u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint=''"
                 }
@@ -45,7 +46,8 @@ pipeline {
 
             steps {
                 sh '''
-                docker build -t mujenkinsapp:$REACT_APP_VERSION .
+                amazon-linux-extras install docker
+                docker build -t myjenkinsapp:$REACT_APP_VERSION .
                 '''
             }
         }
@@ -120,30 +122,7 @@ pipeline {
         //         '''
         //     }
         // }
-
-
-        // stage('Deploy to AWS') {
-        //     agent {
-        //         docker {
-        //             image 'node:20'
-        //             reuseNode true
-        //         }
-        //     }            
-            
-        //     environment {
-        //     NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
-        //     NPM_CONFIG_PREFIX = "${WORKSPACE}/.npm-global"           
-        //     }
-
-        //     steps {
-        //         sh'''
-        //         # Install and run Netlify CLI via npx
-        //             npm install netlify-cli --cache=$NPM_CONFIG_CACHE
-        //             npx netlify --version  # Verify version
-        //             npx netlify deploy --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN --prod
-        //         '''
-        //     }
-        // }                          
+                         
     }
 
     // post {
